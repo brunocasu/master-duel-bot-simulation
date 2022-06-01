@@ -32,6 +32,9 @@ class Player:
         else:
             self.win_streak -= 1
 
+    def skill_check(self):
+        if self.win_streak > 5:
+            self.skill += 1
 
 class GameControl:
     def __init__(self, N_games):
@@ -44,8 +47,8 @@ class GameControl:
         self.player_list.append(create_player())
 
 def make_game(p1, p2):
-    p1_score = random.randint(0, p1.skill)
-    p2_score = random.randint(0, p2.skill)
+    p1_score = get_player_score(p1.skill, "BALANCED")
+    p2_score = get_player_score(p2.skill, "BALANCED")
     if p1_score > p2_score:
         p1.win()
         p2.loss()
@@ -74,10 +77,17 @@ def create_bot(rank, skill):
     return ID
 
 
+def get_player_score(skill_param, type = "BALANCED"):
+    if type == "BALANCED":
+        return ((skill_param/10) + random.randint(0, skill_param))
+    if type == "UNBALANCED":
+        return random.randint(0, skill_param)
+
+
 if __name__ == '__main__':
-    p1 = Player(1, 0, 100, 0)
-    p2 = Player(2, 0, 10, 0)
-    for i in range (1000000):
+    p1 = Player(1, 0, 50, 0)
+    p2 = Player(2, 0, 45, 0)
+    for i in range (100):
         make_game(p1, p2)
 
     print("P1/P2 wins", p1.total_wins, p2.total_wins)
